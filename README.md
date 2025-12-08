@@ -1,6 +1,6 @@
 # Serles ACME.SH Backend
 
-A backend addon for [serles-acme](https://github.com/serles-project/serles-acme) that integrates with [acme.sh](https://github.com/acmesh-official/acme.sh) to issue certificates using DNS-01 validation.
+A backend addon for [serles-acme](https://github.com/dvtirol/serles-acme) that integrates with [acme.sh](https://github.com/acmesh-official/acme.sh) to issue certificates using DNS-01 validation.
 
 ## Overview
 
@@ -11,7 +11,7 @@ This backend passes certificate signing requests to an already configured ACME.S
 - Python 3.6+
 - [acme.sh](https://github.com/acmesh-official/acme.sh) installed and configured
 - A supported DNS provider configured with acme.sh
-- [serles-acme](https://github.com/serles-project/serles-acme) installed
+- [serles-acme](https://github.com/dvtirol/serles-acme) installed
 
 ## Installation
 
@@ -169,6 +169,6 @@ Contributions are welcome! Please submit issues and pull requests.
 
 ## Links
 
-- [serles-acme](https://github.com/serles-project/serles-acme)
+- [serles-acme](https://github.com/dvtirol/serles-acme)
 - [acme.sh](https://github.com/acmesh-official/acme.sh)
 - [acme.sh DNS API Documentation](https://github.com/acmesh-official/acme.sh/wiki/dnsapi)
