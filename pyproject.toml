@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "serles_acmesh_backend"
+version = "1.0.0"
+description = "Backend addon for serles-acme integrating acme.sh DNS-01 validation"
+readme = "README.md"
+requires-python = ">=3.6"
+license = {text = "MIT"}
+authors = [
+    {name = "lalano-network", email = "schrott1212@adesso.de"}
+]
+keywords = ["acme", "certificates", "dns-validation", "acmesh", "serles"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: POSIX :: Linux",
+]
+
+dependencies = [
+    "serles-acme",
+]
+
+[project.urls]
+Source = "https://github.com/yourusername/serles_acme.sh_backend"
+Issues = "https://github.com/yourusername/serles_acme.sh_backend/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["serles*"]
