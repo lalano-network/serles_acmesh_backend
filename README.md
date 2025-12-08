@@ -157,9 +157,6 @@ Enable debug mode for using acme.sh's internal Debug mode:
 debug_mode = True
 ```
 
-## License
-
-[Specify your license here]
 
 ## Contributing
 
