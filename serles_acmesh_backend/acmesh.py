@@ -53,8 +53,8 @@ class AcmeSHBackend:
         if not self.dns_plugin_config:
             raise Exception("Please specify a dns_plugin_config in acmesh section of config.ini")
         
-        self.dns_sleep_time = config["acmesh"].get("dns_sleep_time", 300)
-        self.debug_mode = config["acmesh"].get("debug_mode", False)
+        self.dns_sleep_time = config["acmesh"].get("dns_sleep_time", None)
+        self.debug = config["acmesh"].get("debug", False)
         
 
     def sign(self, csr, subjectDN, subjectAltNames, email):
@@ -74,10 +74,12 @@ class AcmeSHBackend:
                 "--dns", self.dns_plugin,
                 "--fullchain-file", fullchain_file,
                 "--home", self.acmesh_home_path,
-                "--dnssleep", str(self.dns_sleep_time),
             ]
 
-            if self.debug_mode:
+            if self.dns_sleep_time:
+                cmd.append("--dnssleep", str(self.dns_sleep_time))
+                
+            if self.debug:
                 cmd.append("--debug")
 
             # Prepare environment with DNS plugin config

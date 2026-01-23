@@ -58,12 +58,14 @@ acmesh_home_path = /root/.acme.sh
 # See: https://github.com/acmesh-official/acme.sh/wiki/dnsapi
 dns_plugin = dns_pdns
 
-# DNS sleep time in seconds (default: 300)
+# DNS sleep time in seconds (default: None)
 # Time to wait for DNS propagation
+# If no wait time is specified in the config,
+# the "--dnssleep" parameter is not used
 dns_sleep_time = 300
 
 # Enable debug mode (default: False)
-debug_mode = False
+debug = False
 
 # DNS plugin configuration (required)
 # Configuration depends on the dns_plugin used
@@ -115,7 +117,7 @@ For a complete list of supported DNS providers and their configuration, see the 
 | `dns_plugin` | Yes | - | DNS plugin name (e.g., `dns_cf`, `dns_pdns`) |
 | `dns_plugin_config` | Yes | - | Plugin-specific configuration variables |
 | `dns_sleep_time` | No | `300` | Seconds to wait for DNS propagation |
-| `debug_mode` | No | `False` | Enable acme.sh debug output |
+| `debug` | No | `False` | Enable acme.sh debug output |
 
 ## How It Works
 
