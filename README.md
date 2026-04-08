@@ -64,6 +64,10 @@ dns_plugin = dns_pdns
 # the "--dnssleep" parameter is not used
 dns_sleep_time = 300
 
+# Caching of certificate files (default: False)
+# When enabled cert files are stored within acme.sh home directory.
+caching = False
+
 # Enable debug mode (default: False)
 debug = False
 
@@ -117,6 +121,7 @@ For a complete list of supported DNS providers and their configuration, see the 
 | `dns_plugin` | Yes | - | DNS plugin name (e.g., `dns_cf`, `dns_pdns`) |
 | `dns_plugin_config` | Yes | - | Plugin-specific configuration variables |
 | `dns_sleep_time` | No | `300` | Seconds to wait for DNS propagation |
+| `cache` | No | `False` | Enables certificate files caching |
 | `debug` | No | `False` | Enable acme.sh debug output |
 
 ## How It Works
@@ -130,7 +135,7 @@ For a complete list of supported DNS providers and their configuration, see the 
 
 ## Troubleshooting
 
-### Certificate Already Exists
+### Certificate Already Exists (Caching enabled)
 
 If an certificate already exists in the acme.sh backend, it returns the already existing certificate.
 

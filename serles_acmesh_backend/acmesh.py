@@ -1,4 +1,5 @@
 import os
+import shutil
 import tempfile
 import subprocess
 
@@ -54,18 +55,20 @@ class AcmeSHBackend:
             raise Exception("Please specify a dns_plugin_config in acmesh section of config.ini")
         
         self.dns_sleep_time = config["acmesh"].get("dns_sleep_time", None)
+        self.caching = config["acmesh"].get("caching", False)
         self.debug = config["acmesh"].get("debug", False)
         
 
     def sign(self, csr, subjectDN, subjectAltNames, email):
         with tempfile.TemporaryDirectory(prefix="serles-acmesh") as tmpdir:
             
-            csr_file = f"{tmpdir}/csr.pem"
+            # Write the CSR to a temporary file, as ACME.sh expects a file input
+            csr_file = f"{tmpdir}/{subjectAltNames[0]}.csr"
             with open(csr_file, "wb") as fh:
                 fh.write(csr)
 
-            os.makedirs(f"{self.acmesh_home_path}/certificates/", exist_ok=True)
-            fullchain_file = f"{self.acmesh_home_path}/certificates/{subjectAltNames[0]}.pem"
+            # Store fullchain in temporary file, as ACME.sh expects a file output. Will be read and returned after signing.
+            fullchain_file = f"{tmpdir}/{subjectAltNames[0]}.pem"
 
             cmd = [
                 self.acmesh_binary_path,
@@ -96,18 +99,23 @@ class AcmeSHBackend:
             elif res.returncode != 0:
                 return (None, f"acme.sh exited with error {res.returncode} and output:\n{output}")
 
+            # Delete Certificate files from ACME.sh home directory to prevent issues with future certificate requests for the same domain
+            if not self.caching:
+                self.delete_acmesh_certificate_directory(subjectAltNames[0])
+
             with open(fullchain_file, "r") as new_chain:
                 return new_chain.read(), None
 
+
     def _parse_dns_plugin_config(self, config_str):
-        # Parse the nested config string and create environment dict
+        """Parse the nested config string and create environment dict"""
         config_dict = {}
         for line in config_str.strip().splitlines():
             line = line.strip()
             
             # Throw Error if config is malformed
             if not line or '=' not in line:
-                RuntimeError(f"Malformed dns_plugin_config line: '{line}'")
+                raise RuntimeError(f"Malformed dns_plugin_config line: '{line}'")
             
             key, _, value = line.partition('=')
             key = key.strip()
@@ -116,3 +124,33 @@ class AcmeSHBackend:
             config_dict[key] = value
 
         return config_dict
+
+    
+    def delete_acmesh_certificate_directory(self, domain):
+        """Deletes the certificate directory for the given domain from the ACME.sh home path, with minimal collateral damage."""
+        try:
+            cmd = [
+                self.acmesh_binary_path,
+                "--info",
+                "-d", domain,
+                "--home", self.acmesh_home_path,
+            ]
+            res = subprocess.run(cmd, stdout=PIPE, stderr=PIPE, check=False)
+        except Exception as e:
+            raise RuntimeWarning(f"Could not retrieve certificate info for domain {domain} from ACME.sh home path.\n"
+                                 f"Please check if the certificate was created successfully and if the home path is correct.\n"
+                                 f"Error details: {str(e)}")
+
+        conf_directory = None
+        for line in res.stdout.decode().splitlines():
+            if line.startswith("DOMAIN_CONF="):
+                conf_path = line.split("=", 1)[1].strip()
+                conf_directory = os.path.dirname(conf_path)
+
+        if conf_directory and os.path.exists(conf_directory):
+            try:
+                shutil.rmtree(conf_directory)
+            except Exception as e:
+                raise RuntimeWarning(f"Could not find certificate directory for domain {domain} in ACME.sh home path.\n"
+                                     f"Please check if the certificate was created successfully and if the home path is correct.\n"
+                                     f"Error details: {str(e)}")
