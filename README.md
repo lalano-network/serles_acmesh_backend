@@ -24,7 +24,7 @@ pip install git+https://github.com/lalano-network/serles_acmesh_backend.git
 Or install a specific version/tag:
 
 ```bash
-pip install git+https://github.com/lalano-network/serles_acmesh_backend.git@v0.1.0
+pip install git+https://github.com/lalano-network/serles_acmesh_backend.git@1.1.0
 ```
 
 Or add to your `requirements.txt`:

@@ -29,8 +29,8 @@ dependencies = [
 ]
 
 [project.urls]
-Source = "https://github.com/yourusername/serles_acme.sh_backend"
-Issues = "https://github.com/yourusername/serles_acme.sh_backend/issues"
+Source = "https://github.com/lalano-network/serles_acmesh_backend"
+Issues = "https://github.com/lalano-network/serles_acmesh_backend/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
